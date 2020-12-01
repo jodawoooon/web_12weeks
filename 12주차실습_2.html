@@ -1,0 +1,65 @@
+<!--파이 차트를 그려라.-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>캔버스에 파이 차트 그리기</title>
+</head>
+
+
+<body>
+    <h3>학점 별로 학생 수를 입력하면 파이 차트로 비율 그리기</h3>
+    <hr>
+    <p>A <input type="text" id="St">명 B
+        <input type="text" id="St">명 C
+        <input type="text" id="St">명
+    </p>
+    <p>D <input type="text" id="St">명 F
+        <input type="text" id="St">명
+        <button type="text" onclick="draw()">차트 그리기</button>
+    </p>
+
+    <canvas id="piCV"  style="background-color:aliceblue" width="400" height="300">
+
+        <script>
+            function draw() {
+                var angle = 0;
+                var total = 0;
+                var canvas = document.getElementById("piCV");
+                var context = canvas.getContext("2d");
+                var sw = canvas.width;
+                var sh = canvas.height;
+                var padding = 100;
+
+                var ip = document.getElementById("St");
+                var data = [];
+                for (var i = 0; i < ip.length; i++) {
+                    data[i] = ip[i];
+                }
+                var color = ["blue", "green", "yellow", "magenta", "red"];
+                var conterX = sw / 2; //원의 중심 x좌표
+                var conterY = sh / 2; //원의 중심 y좌표
+                var radius = Math.min(sw - (padding * 2), sh - (padding * 2)) / 2; //두개 중에 작은 거를 반지름으로 설정
+
+                for (var i in data) {
+                    total += data[i]; //데이터의 총합 total
+                }
+
+                for (var i = 0; i < data.length; i++) {
+                    context.fillstyle = color[i]; //색 지정
+                    context.beginPath(); //빈 경로 구성. path 시작
+                    context.moveTo(conterX, conterY); //원의 중심으로 이동
+                    context.arc(conterX, conterY, radius, angle, angle + (Math.PI * 2 * (data[i] / total)), false);
+                    //x, y, 반지름, 시작점, 끝점, 그리는 방향
+                    context.lineTo(conterX, conterY);
+                    context.fill(); //채우기
+                    angle += Math.PI * 2 * (data[i] / total);
+                    context.stroke();
+                }
+            }
+        </script>
+</body>
+
+</html>

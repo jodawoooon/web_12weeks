@@ -1,0 +1,63 @@
+<!-- 선의 굵기와 선색을 선
+택하여 마우스 드래깅
+으로 그림을 그리도록
+하라.
+ -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>마우스 드래깅으로 캔버스에 그림 그리기</title>
+</head>
+
+<body onload="init()">
+    <h3>마우스를 누른 채 드래깅하여 그림 그려 보세요</h3>
+    <hr>
+    <canvas id="myCanvas" style="background-color:aliceblue" width="400" height="300">
+    </canvas>
+    <p>선굵기: <input type="text" id="line" size="3" onchange="input()">
+    <p>선 색 : <input type="color" id="color" value="#000000" onchange="color(this)"></p>
+    <script>
+        var canvas, context;
+        function input(){
+            line = document.getElementById("line").value;
+            context.lineWidth = line; // 선 굵기를 입력받은대로
+            
+        }
+        function color(t){
+            context.strokeStyle = t.value;
+        }
+        function init() {
+            canvas = document.getElementById("myCanvas"); //캔버스 DOM객체
+            context = canvas.getContext("2d"); //캔버스에 그림 그리는 도구 객체
+            
+            canvas.addEventListener("mousemove", function (e) { move(e) }, false); 
+            canvas.addEventListener("mousedown", function (e) { down(e) }, false);
+            canvas.addEventListener("mouseup", function (e) { up(e) }, false);
+            canvas.addEventListener("mouseout", function (e) { out(e) }, false);
+            //이벤트 리스너 
+        }
+        var startX = 0, startY = 0; // 드래깅동안, 처음 마우스가 눌러진 좌표
+        var dragging = false;
+        function draw(curX, curY) {
+            context.beginPath();
+            context.moveTo(startX, startY);
+            context.lineTo(curX, curY);
+            context.stroke();
+        }
+        function down(e) { //마우스 down시 호출
+            startX = e.offsetX; startY = e.offsetY; dragging = true;
+        }
+        function up(e) { dragging = false; } //마우스  up시 호출
+        function move(e) { //마우스를 움직이는 동안 호출
+            if (!dragging) return; // 마우스가 눌러지지 않았으면 리턴
+            var curX = e.offsetX, curY = e.offsetY;
+            draw(curX, curY);
+            startX = curX; startY = curY;
+        }
+        function out(e) { dragging = false; } //마우스가 캔버스 바깥으로 나가면 호출
+    </script>
+</body>
+
+</html>
